@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Booking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 80%;
+            margin: auto;
+        }
+        #rooms {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .room-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            width: 250px;
+        }
+        button {
+            padding: 8px 12px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .image-preview {
+            width: 200px;
+            height: 200px;
+            margin: 5px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Hotel Room Booking</h1>
+    <div class="container">
+        <h2>Available Rooms</h2>
+        <div id="rooms"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+
+     async function fetchRooms() {
+    const response = await fetch(`${API_URL}/bookings/`);
+    const bookings = await response.json();
+
+    const roomsResponse = await fetch(`${API_URL}/rooms`);
+    const rooms = await roomsResponse.json();
+    
+
+    document.getElementById('rooms').innerHTML = '';
+
+    rooms.forEach(room => {
+        const isBooked = bookings.some(booking => booking.room._id === room._id && booking.status !== 'Cancelled');
+
+        const roomCard = document.createElement('div');
+        roomCard.classList.add('room-card');
+
+        roomCard.innerHTML = `
+            ${Array.isArray(room.images) 
+                ? room.images.map(img => `<img src="${img.startsWith('http') ? img : `/uploads/${img}`}" class="image-preview">`).join('') 
+                : `<img src="${room.images.startsWith('http') ? room.images : `/uploads/${room.images}`}" class="image-preview">`}
+            <h3>Room ${room.roomNumber} - ${room.type}</h3>
+            <p>Price: $${room.price}/night</p>
+            <p>${room.description}</p>
+            <button onclick="checkAvailability('${room._id}')">Check Availability</button>
+           ${isBooked || room.status !== 'Available' ? `<p style="padding: 8px 12px; background-color: red; color: white; border: none; cursor: not-allowed; margin-top: 10px; display: inline-block; font-weight: bold;" >Booked</p>` : `<button onclick="bookRoom('${room._id}', ${room.price}, 'Available')">Book Now</button>`}
+     `;
+
+        document.getElementById('rooms').appendChild(roomCard);
+    });
+}
+
+        async function checkAvailability(roomId) {
+            try {
+                const response = await fetch(`${API_URL}/bookings/availability/${roomId}`);
+                
+                console.log('Response Status:', response.status); // Log status code
+                console.log('Response Headers:', response.headers); // Log response headers
+                
+                if (!response.ok) {
+                    // If the response status is not OK, throw an error
+                    throw new Error(`Failed to fetch availability: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('Response Data:', data); // Log the actual data returned from the server
+
+                // Assuming the status is a string like 'Available' or 'Not Available'
+                if (data.success) {
+                    alert(`Room is ${data.status === 'Available' ? 'Available' : 'Not Available'}`);
+                } else {
+                    alert('Error: Unable to fetch room availability.');
+                }
+            } catch (error) {
+                // Catch any errors (network issues, API failures, etc.)
+                console.error('Error checking room availability:', error);
+                alert('There was an error checking the room availability. Please try again later.');
+            }
+        }
+
+        function getUserIdFromToken() {
+            const token = localStorage.getItem("authToken");
+            if (!token) {
+                alert("Please log in first!");
+                return null;
+            }
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.id;
+        }
+
+        async function bookRoom(roomId, price) {
+            const userId = getUserIdFromToken();
+            if (!userId) return;
+
+            const checkInDate = prompt("Enter check-in date (YYYY-MM-DD):");
+            const checkOutDate = prompt("Enter check-out date (YYYY-MM-DD):");
+
+            const bookingData = {
+                username: userId,
+                room: roomId,
+                checkInDate,
+                checkOutDate,
+                totalAmount: price
+            };
+
+            const response = await fetch(`${API_URL}/bookings/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bookingData)
+            });
+
+            const result = await response.json();
+            alert(result.message || 'Booking successful!');
+            fetchRooms();
+        }
+
+        fetchRooms();
+    </script>
+
+</body>
+</html>

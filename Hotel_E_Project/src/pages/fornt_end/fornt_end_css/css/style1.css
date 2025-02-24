@@ -1,0 +1,392 @@
+.homepage {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+    color: #fff;
+  }
+  .homepagee {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+    color: #ffffff00;
+  }
+  
+  .background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+  .backimage {
+  background-image: url('/img/about5.jpg');
+  background-size: cover;
+  background-position: center;
+  position: fixed;
+  width: 100%;
+  height: 200vh;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  z-index: -1;
+}
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+  }
+  
+  .content {
+    position: relative;
+    z-index: 3;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: transparent;
+    font-weight: bold;
+  }
+  
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+  }
+  
+  .booking-button {
+    background-color: #e4a764;
+    color: #fff;
+    padding: 7px 30px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .booking-button:hover {
+    background-color: #ffffff;
+    color: #000;
+  }
+  
+  .hero-section {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-top: 4.5%;
+    height: calc(100% - 80px); /* Adjust based on navbar height */
+    text-align: left;
+    padding: 0 20px;
+  }
+  
+  .hero-content h1 {
+    color: #fff;
+    text-align: left;
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+  
+  .hero-content p {
+    font-size: 18px;
+    margin-bottom: 30px;
+  }
+  
+  .choose-room {
+    background-color: #e4a764;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+  }
+  
+  .choose-room:hover {
+    background-color: #ffffff;
+    color: #000;
+  }
+ /* Card Container */
+.card-container {
+    display: flex;
+    justify-content: space-between;
+    /* gap: 20px; */
+    /* padding: 50px; */
+    /* margin-top: 20px; */
+  }
+  
+  .card1 {
+    background-color: #A27238;
+    
+    /* padding: 20px; */
+    border: 1px solid #A27238;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centering content vertically */
+    gap: 30px;
+    /* padding: 5px; */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adding a subtle shadow */
+    flex: 1;
+    transition: transform 0.3s, box-shadow 0.3s; 
+  }
+  
+  .card2 {
+    background-color: #79552A;
+    /* padding: 20px; */
+    border: 1px solid #79552A;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centering content vertically */
+    gap: 30px;
+    /* padding: 5px; */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adding a subtle shadow */
+    flex: 1;
+    transition: transform 0.3s, box-shadow 0.3s; 
+  }
+  .card3 {
+    background-color: #51391C;
+    border: 1px solid #51391C;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centering content vertically */
+    gap: 30px;
+    /* padding: 5px; */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adding a subtle shadow */
+    flex: 1;
+    transition: transform 0.3s, box-shadow 0.3s; /* Adding transition for box-shadow */
+     }
+  
+  #card h3 {
+    color: #fff;
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  #card p {
+    margin-top: 10px;
+    color: #ffffff;
+  }
+ /* Room section styles (same as previous) */
+.roomsection {
+    position: relative;
+    width: 100%;
+    height: 150vh;
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+    color: #fff;
+  }
+  
+  .roomsectionimage {
+    position: absolute;
+    background-image: url(/img/roomsection.jpg);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+  
+  .roomsection-content {
+    position: relative;
+    top: 12%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
+  }
+  
+  .roomsection h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #fff;
+    font-weight: bold;
+  }
+  
+  .roomsection p {
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 30px;
+  }
+  
+  .roomsection button {
+    padding: 10px 20px;
+    background-color: #ff8c00;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .roomsection button:hover {
+    background-color: #e57c00;
+  }
+  
+  /* Card styles */
+  .card-container1 {
+    display: flex;
+    justify-content: space-between;
+    
+    gap: 30px;
+    padding: 50px;
+    margin-top: 10%;
+    position: absolute;
+    z-index: 3;
+    flex-wrap: wrap;
+  }
+  
+  .card4 {
+    background-color: rgba(49, 49, 49, 0.473);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    top: 40%;
+    text-align: center;
+    flex: 1;
+    min-width: 350px;
+    max-width: 300px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    /* position: absolute; */
+  }
+  
+  .card4:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card4 h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #51391C;
+  }
+  
+  .card4 p {
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  .card4 img {
+    width: 100%;
+    border-radius: 8px;
+    height: 200px;
+    object-fit: cover;
+    margin-bottom: 15px;
+  }
+  
+  /* Icon container styles */
+  #card4guest {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px; /* Spacing between the icon and text */
+    background-color: rgba(0, 0, 0, 0.6); /* Background for the icon and text */
+    padding: 10px 15px; /* Padding around the content */
+   
+    top: 10px; /* Adjust the position to be at the top */
+    left: 0px; /* Adjust the position to be from the left */
+  }
+  
+  #card4guest h2 {
+    font-size: 16px;
+    color: #fff;
+    margin: 0; /* Remove default margin for h2 */
+    text-align: left;
+  }
+  
+  #card4guest h2:first-of-type {
+    font-size: 20px; /* Larger font size for the guest count */
+    font-weight: bold;
+  }
+  
+
+  #card4style h3 {
+    
+    text-align: left;
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+  
+  #card4style p {
+    font-size: 16px;
+    color: #ffffff;
+  }
+  
+  .booking-button {
+    padding: 10px 20px;
+    background-color: #ff8c00;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .booking-button:hover {
+    background-color: #e57c00;
+  }
+  
+
+  .about {
+    width: 100%;
+    height: 100vh;
+    background-color: #79552A;
+    display: flex;
+    justify-content: left;
+}
+
+.aboutimage {
+    width: 50%;
+    height: 100vh;
+    /* gap: 10px; */
+}
+
+.aboutimage img {
+    width: 48%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 5px;
+    margin-top: 12%;
+    height: 80%;
+    object-fit: cover;
+}
+
+.abouttext {
+    width: 40%;
+    height: 100vh;
+    
+    margin-left: 65px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.abouttext h1 {
+    text-align: left;
+    font-size: 30px;
+    margin-top: 10%;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+}
+
+@media (max-width: 768px) {
+    .aboutimage, .abouttext {
+        width: 100%;
+        height: auto;
+    }
+
+    .abouttext h1 {
+        font-size: 24px;
+    }
+}

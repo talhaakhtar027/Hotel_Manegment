@@ -1,0 +1,56 @@
+.room-container {
+    width: 80%;
+    margin: auto;
+  }
+  
+  .room-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
+    
+  }
+  input , select{
+    padding: 5px 10px ;
+  }
+  .image-preview {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    margin: 5px;
+    border-radius: 5px;
+  }
+  
+  .image-preview img {
+    width: 80px;
+    height: 80px;
+    margin: 5px;
+    border-radius: 5px;
+  }
+  
+  .room-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .room-table th, .room-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .delete-btn {
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+  }
+  
+  .edit-btn {
+    background: rgb(17, 0, 255);
+    color: white;
+    border: none;
+    padding: 5px 15px;
+  }
+  

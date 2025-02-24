@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-semibold mb-4 text-center">User Management</h2>
+
+    <!-- User Table -->
+    <div class="overflow-x-auto">
+        <table class="w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border p-2">Name</th>
+                    <th class="border p-2">Email</th>
+                    <th class="border p-2">Phone</th>
+                    <th class="border p-2">Role</th>
+                    <th class="border p-2">Action</th>
+                </tr>
+            </thead>
+            <tbody id="userTable">
+                <tr>
+                    <td colspan="5" class="border p-2 text-center text-gray-500">Loading users...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:3000/api/users";  // Correct API URL
+
+       // Fetch and display users
+       function getUsers() {
+            fetch(API_URL)  <!-- Corrected API_URL reference -->
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector("#userTable");
+                    tbody.innerHTML = ""; // Clear previous rows
+
+                    data.data.forEach(user => {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td>${user.name}</td>
+                            <td>${user.email}</td>
+                            <td>${user.phone}</td>  <!-- Corrected 'Phone' to 'phone' -->
+                            <td>${user.role}</td>
+                            <td>
+                                <button onclick="editUser('${user._id}', '${user.name}', '${user.email}', '${user.phone}', '${user.role}')">Edit</button>
+                                <button class="delete" onclick="deleteUser('${user._id}')">Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                })
+                .catch(error => console.log('Error fetching users:', error));
+        }
+
+        // Edit user
+        function editUser(id, name, email, phone, role) {  // Corrected 'Phone' to 'phone'
+            const newName = prompt("Edit Name", name);
+            const newEmail = prompt("Edit Email", email);
+            const newPhone = prompt("Edit Phone", phone);  // Corrected 'Phone' to 'phone'
+            const newRole = prompt("Edit Role", role);  // Corrected 'role' typo
+
+            if (newName && newEmail && newPhone) {
+                fetch(`${API_URL}/${id}`, {  // Corrected 'apiUrl' to 'API_URL'
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ name: newName, email: newEmail, phone: newPhone, role: newRole })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("User updated successfully!");
+                        getUsers();
+                    } else {
+                        alert("Error updating user");
+                    }
+                })
+                .catch(error => console.log('Error updating user:', error));
+            }
+        }
+
+        // Delete user
+        function deleteUser(id) {
+            if (confirm("Are you sure you want to delete this user?")) {
+                fetch(`${API_URL}/${id}`, {  // Corrected 'apiUrl' to 'API_URL'
+                    method: "DELETE",
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("User deleted successfully!");
+                        getUsers();
+                    } else {
+                        alert("Error deleting user");
+                    }
+                })
+                .catch(error => console.log('Error deleting user:', error));
+            }
+        }
+
+        // Fetch users on load
+        document.addEventListener("DOMContentLoaded", getUsers);
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chart.js Example</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    canvas {
+      max-width: 600px;
+      margin: 50px auto;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="lineChart"></canvas>
+
+  <script>
+    const ctx = document.getElementById('lineChart').getContext('2d');
+    const lineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May'], // X-axis labels
+        datasets: [
+          {
+            label: 'My First dataset',
+            data: [99, 75, 85, 70, 95],
+            borderColor: 'red',
+            backgroundColor: 'rgba(255, 0, 0, 0.1)',
+            pointBorderColor: 'red',
+            pointBackgroundColor: 'red',
+            tension: 0.4, // Smooth curves
+            fill: false,
+          },
+          {
+            label: 'My Second dataset',
+            data: [87, 60, 78, 90, 65],
+            borderColor: 'blue',
+            backgroundColor: 'rgba(0, 0, 255, 0.1)',
+            pointBorderColor: 'blue',
+            pointBackgroundColor: 'blue',
+            tension: 0.4,
+            fill: false,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            enabled: true,
+            callbacks: {
+              label: function(context) {
+                return `${context.dataset.label}: ${context.raw}`;
+              }
+            }
+          },
+          legend: {
+            position: 'top',
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Months',
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Values',
+            },
+            min: 50,
+            max: 100,
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

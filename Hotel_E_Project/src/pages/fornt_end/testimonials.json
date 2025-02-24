@@ -1,0 +1,20 @@
+{
+    "testimonials": [
+      {
+        "review": "Our stay was truly wonderful. The rooms were immaculate, and the service was top-notch.",
+        "name": "John Doe",
+        "designation": "Travel Blogger"
+      },
+      {
+        "review": "A perfect getaway destination. The view from our room was breathtaking.",
+        "name": "Jane Smith",
+        "designation": "Photographer"
+      },
+      {
+        "review": "Excellent service and luxurious amenities. Highly recommended!",
+        "name": "Alice Johnson",
+        "designation": "Entrepreneur"
+      }
+    ]
+  }
+  

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        .form-container {
+            width: 300px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Login</h2>
+    <div class="form-container" id="login-form-container">
+        <form id="login-form">
+            <input type="email" id="email" placeholder="Email" required><br>
+            <input type="password" id="password" placeholder="Password" required><br>
+            <button type="submit">Login</button>
+        </form>
+        <button id="show-register-form">Don't have an account? Register</button>
+    </div>
+
+    <h2>Register</h2>
+    <div class="form-container" id="register-form-container" style="display: none;">
+        <form id="register-form">
+            <input type="text" id="name" placeholder="Name" required><br>
+            <input type="email" id="email-register" placeholder="Email" required><br>
+            <input type="text" id="phone" placeholder="Phone" required><br>
+            <input type="password" id="password-register" placeholder="Password" required><br>
+            <button type="submit">Register</button>
+        </form>
+        <button id="show-login-form">Already have an account? Login</button>
+    </div>
+
+    <script>
+        // Handle login form submission
+        document.getElementById("login-form").addEventListener("submit", async function(event) {
+            event.preventDefault();  // Prevent default form submission
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                // Make login request to backend
+                const response = await fetch("http://localhost:3000/api/users/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Login failed");
+                }
+
+                const data = await response.json();
+                const { token, user } = data;
+
+                // Store token in localStorage for future requests
+                localStorage.setItem("authToken", token);
+
+                // Show success message
+                alert("Login successful! Welcome, " + user.name);
+
+                // Redirect to protected route page
+                window.location.href = "protected.html";
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        // Handle register form submission
+        document.getElementById("register-form").addEventListener("submit", async function(event) {
+            event.preventDefault();  // Prevent default form submission
+
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email-register").value;
+            const phone = document.getElementById("phone").value;
+            const password = document.getElementById("password-register").value;
+                
+                
+            try {
+                // Make registration request to backend
+                const response = await fetch("http://localhost:3000/api/users/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ name, email, phone, password })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Registration failed");
+                }
+
+                alert("Registration successful! You can now login.");
+                toggleForm();
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        // Toggle between login and register forms
+        document.getElementById("show-register-form").addEventListener("click", function() {
+            document.getElementById("login-form-container").style.display = "none";
+            document.getElementById("register-form-container").style.display = "block";
+        });
+
+        document.getElementById("show-login-form").addEventListener("click", function() {
+            document.getElementById("register-form-container").style.display = "none";
+            document.getElementById("login-form-container").style.display = "block";
+        });
+    </script>
+
+</body>
+</html>

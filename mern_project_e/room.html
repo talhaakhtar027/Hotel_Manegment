@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Room Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        input, button, select { margin: 5px; padding: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        button { cursor: pointer; }
+        .delete-btn { background-color: red; color: white; border: none; }
+        .edit-btn { background-color: green; color: white; border: none; }
+        .image-preview {
+    width: 100px;  /* Adjust size */
+    height: 100px; /* Adjust size */
+    margin: 5px;
+    object-fit: cover;  /* Ensures the images are not stretched */
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Room Management</h2>
+
+    <h3 id="formTitle">Add a New Room</h3>
+    <input type="hidden" id="roomId"> <!-- Hidden input for room ID -->
+    <input type="text" id="roomNumber" placeholder="Room Number">
+    <select id="type">
+        <option value="">Select Room Type</option>
+        <option value="Single">Single</option>
+        <option value="Double">Double</option>
+        <option value="Suite">Suite</option>
+    </select>
+    <input type="number" id="price" placeholder="Price" min="1">
+    <select id="status">
+        <option value="Available">Available</option>
+        <option value="Occupied">Occupied</option>
+        <option value="Cleaning">Cleaning</option>
+    </select>
+    <input type="number" id="capacity" placeholder="Capacity (Number of guests)">
+    <select id="cleaningStatus">
+        <option value="Clean">Clean</option>
+        <option value="Needs Cleaning">Needs Cleaning</option>
+        <option value="Being Cleaned">Being Cleaned</option>
+    </select>
+    <input type="text" id="amenities" placeholder="Amenities (comma separated)">
+    <input type="text" id="description" placeholder="Description">
+    <input type="number" id="floor" placeholder="Floor Number">
+    
+    <label>Upload Images:</label>
+    <input type="file" id="images" multiple accept="image/*">
+    <div id="imagePreview"></div>
+
+    <button id="saveBtn" onclick="saveRoom()">Save Room</button>
+    <button id="cancelBtn" onclick="cancelEdit()" style="display: none;">Cancel</button>
+
+    <h2>Available Rooms</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Room Number</th>
+                <th>Type</th>
+                <th>Price</th>
+                <!-- <th>Availability</th> -->
+                <th>Status</th>
+                <th>Capacity</th>
+                <th>Cleaning Status</th>
+                <th>Amenities</th>
+                <th>Floor</th>
+                <th>Images</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="roomList"></tbody>
+    </table>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api/rooms';
+
+        async function getRooms() {
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error("Failed to fetch rooms");
+        const rooms = await response.json();
+
+        document.getElementById('roomList').innerHTML = rooms.map(room => `
+            <tr>
+                <td>${room.roomNumber}</td>
+                <td>${room.type}</td>
+                <td>$${room.price}</td>
+                
+                <td>${room.status}</td>
+                <td>${room.capacity}</td>
+                <td>${room.cleaningStatus}</td>
+                <td>${room.amenities.join(', ')}</td>
+                <td>${room.floor}</td>
+                <td>
+                    ${
+                        Array.isArray(room.images) 
+                        ? room.images.map(img => `<img src="${img.startsWith('http') ? img : `/uploads/${img}`}" class="image-preview">`).join('') 
+                        : `<img src="${room.images.startsWith('http') ? room.images : `/uploads/${room.images}`}" class="image-preview">`
+                    }
+                </td>
+                <td>
+                    <button class="edit-btn" onclick="editRoom('${room._id}')">Edit</button>
+                    <button class="delete-btn" onclick="deleteRoom('${room._id}')">Delete</button>
+                </td>
+            </tr>
+        `).join('');
+    } catch (error) {
+        alert("Error fetching rooms: " + error.message);
+    }
+}
+
+
+        async function saveRoom() {
+    const roomId = document.getElementById('roomId').value;
+    const roomData = new FormData(); // Use FormData to send data and images
+
+    roomData.append('roomNumber', document.getElementById('roomNumber').value.trim());
+    roomData.append('type', document.getElementById('type').value.trim());
+    roomData.append('price', parseFloat(document.getElementById('price').value));
+    roomData.append('status', document.getElementById('status').value);
+    roomData.append('capacity', parseInt(document.getElementById('capacity').value));
+    roomData.append('cleaningStatus', document.getElementById('cleaningStatus').value);
+    roomData.append('amenities', document.getElementById('amenities').value.split(',').map(a => a.trim()).join(','));
+    roomData.append('description', document.getElementById('description').value.trim());
+    roomData.append('floor', parseInt(document.getElementById('floor').value));
+
+    // Add images to FormData if any
+    const images = document.getElementById('images').files;
+    for (let i = 0; i < images.length; i++) {
+        roomData.append('images', images[i]);
+    }
+
+    try {
+        const method = roomId ? 'PUT' : 'POST';
+        const endpoint = roomId ? `${API_URL}/${roomId}` : API_URL;
+
+        const response = await fetch(endpoint, {
+            method,
+            body: roomData // Send FormData
+        });
+
+        if (!response.ok) throw new Error("Failed to save room");
+
+        clearForm();
+        getRooms();
+    } catch (error) {
+        alert("Error saving room: " + error.message);
+    }
+}
+
+
+        async function editRoom(id) {
+            try {
+                const response = await fetch(`${API_URL}/${id}`);
+                if (!response.ok) throw new Error("Room not found");
+
+                const room = await response.json();
+
+                document.getElementById('roomId').value = room._id;
+                document.getElementById('roomNumber').value = room.roomNumber;
+                document.getElementById('type').value = room.type;
+                document.getElementById('price').value = room.price;
+                document.getElementById('status').value = room.status;
+                document.getElementById('capacity').value = room.capacity;
+                document.getElementById('cleaningStatus').value = room.cleaningStatus;
+                document.getElementById('amenities').value = room.amenities.join(',');
+                document.getElementById('description').value = room.description;
+                document.getElementById('floor').value = room.floor;
+
+                document.getElementById('formTitle').textContent = "Edit Room";
+                document.getElementById('saveBtn').textContent = "Update Room";
+                document.getElementById('cancelBtn').style.display = "inline-block";
+            } catch (error) {
+                alert("Error fetching room: " + error.message);
+            }
+        }
+
+        async function deleteRoom(id) {
+            if (!confirm('Are you sure you want to delete this room?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+                if (!response.ok) throw new Error("Failed to delete room");
+
+                getRooms();
+            } catch (error) {
+                alert("Error deleting room: " + error.message);
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('roomId').value = '';
+            document.getElementById('formTitle').textContent = "Add a New Room";
+            document.getElementById('saveBtn').textContent = "Save Room";
+            document.getElementById('cancelBtn').style.display = "none";
+        }
+
+        getRooms();
+    </script>
+
+</body>
+</html>

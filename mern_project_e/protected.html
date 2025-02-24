@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protected Route</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        .content {
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="content">
+        <h2>Protected Route</h2>
+        <p id="message"></p>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        // Fetch protected data using the JWT token
+        async function getProtectedData() {
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+        window.location.href = "login12.html";
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:3000/api/protected", {
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (response.status === 403) {
+            alert("Session expired. Please log in again.");
+            localStorage.removeItem("authToken"); // Clear token
+            window.location.href = "login12.html"; // Redirect to login page
+        }
+
+        const data = await response.json();
+        document.getElementById("message").textContent = data.message;
+
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Failed to fetch protected data");
+    }
+}
+
+        // Logout function to clear localStorage
+        function logout() {
+            localStorage.removeItem("authToken");
+            alert("Logged out successfully!");
+            window.location.href = "login12.html"; // Redirect to login page
+        }
+
+        // Get protected data when the page loads
+        window.onload = getProtectedData;
+    </script>
+
+</body>
+</html>
