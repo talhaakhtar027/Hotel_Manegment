@@ -6,6 +6,7 @@ import Breadcrumb from './component/Breadcrumb';
 import RoomsCompenent from './component/RoomsCompenent';
 import sectionImg3 from '/assets/images/room-bg1.3a17f7238afe7753f573.jpg';
 import './fornt_end_css/css/style1.css';
+import Navbar from './component/Navbar';
 
 const Room = () => {
   const main = useRef(null);
@@ -34,21 +35,7 @@ const Room = () => {
       </Box>
 
       {/* Navbar Section */}
-      <Box className="content" sx={{ position: 'relative', zIndex: 10 }}>
-        {/* Ensure navbar is above the background */}
-        <nav className="navbar" style={{ position: 'relative', zIndex: 20 }}>
-          <div className="logo">Marina Hotel</div>
-          <ul className="nav-links">
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/app/about">About</Link></li>
-            <li><Link to="/app/rooms">Rooms</Link></li>
-            <li><Link to="/app/booking">Booking</Link></li>
-            <li><Link to="/app/gallery">Gallery</Link></li>
-            <li><Link to="/app/contact">Contact</Link></li>
-          </ul>
-          <Button variant="contained" sx={{ backgroundColor: '#e57c00', '&:hover': { backgroundColor: '#cc6d00' } }}>Booking</Button>
-        </nav>
-      </Box>
+      < Navbar />
 
       {/* Breadcrumb Section */}
       <Breadcrumb text1="We Are" text2="Seaside" sx={{ top: '30%' }} />

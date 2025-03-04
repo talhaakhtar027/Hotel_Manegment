@@ -194,17 +194,23 @@ const RoomManagement = () => {
               fullWidth
               margin="normal"
             />
-            <InputLabel>Type</InputLabel>
-            <Select
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-              fullWidth
-            >
-              <MenuItem value="Single">Single</MenuItem>
-              <MenuItem value="Double">Double</MenuItem>
-              <MenuItem value="Suite">Suite</MenuItem>
-            </Select>
+         <InputLabel>Type</InputLabel>
+<Select
+  name="type"
+  value={formData.type}
+  onChange={handleChange}
+  fullWidth
+  label="Type"
+>
+  <MenuItem value="Standard Room">Standard Room</MenuItem>
+  <MenuItem value="Deluxe Room">Deluxe Room</MenuItem>
+  <MenuItem value="Premier Room">Premier Room</MenuItem>
+  <MenuItem value="Family Suite">Family Suite</MenuItem>
+  <MenuItem value="Luxury Suite">Luxury Suite</MenuItem>
+  <MenuItem value="President Suite">President Suite</MenuItem>
+</Select>
+
+
             <TextField
               name="price"
               label="Price"

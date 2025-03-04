@@ -1,18 +1,21 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useParams, Link } from "react-router-dom";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useParams } from "react-router-dom";
 import { HiOutlineUserCircle, HiOutlineArrowsExpand, HiCheck } from "react-icons/hi";
 import { BiBed } from "react-icons/bi";
 import Breadcrumb from "./component/Breadcrumb";
-import Button from "./component/Button";
 import RoomPageSlider from "./component/RoomPageSlide";
 import Navbar from "./component/Navbar";
 import sectionImg3 from '/assets/images/bg-room.jpg';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button as MUIButton } from "@mui/material";
 import './fornt_end_css/css/style1.css';
 
 const Single = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
   const { id } = useParams();
   const imgRef = useRef(null);
 
@@ -57,6 +60,42 @@ const Single = () => {
       </ul>
     );
   };
+
+  const getUserIdFromToken = () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      alert("Please log in first!");
+      return null;
+    }
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.id;
+  };
+
+  const bookRoom = useCallback(async (roomId, price) => {
+    const userId = getUserIdFromToken();
+    if (!userId) return;
+
+    const bookingData = {
+      username: userId,
+      room: roomId,
+      checkInDate,
+      checkOutDate,
+      totalAmount: price
+    };
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/bookings/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bookingData)
+      });
+      const result = await response.json();
+      alert(result.message || 'Booking successful!');
+      setIsModalOpen(false); // Close modal after successful booking
+    } catch (error) {
+      console.error("Booking failed:", error);
+    }
+  }, [checkInDate, checkOutDate]);
 
   if (loading) {
     return <p className="text-center text-white">Loading...</p>;
@@ -127,16 +166,17 @@ const Single = () => {
             )}
 
             <div className="flex justify-center items-center max-md:block">
-              <Link to="/booking">
-                <Button
-                  text="Book Now"
-                  sx={{
-                    backgroundColor: '#e57c00',
-                    '&:hover': { backgroundColor: '#cc6d00' },
-                    color: 'black',
-                  }}
-                />
-              </Link>
+              <MUIButton  variant="contained" sx={{
+  textTransform: 'none',
+  borderRadius: '12px',
+  padding: '10px 20px',
+  fontWeight: 'bold',
+  backgroundColor: '#e57c00',
+  '&:hover': { backgroundColor: '#cc6d00' },
+  color: 'black',
+}} onClick={() => setIsModalOpen(true)}>
+                Book Now
+              </MUIButton>
             </div>
           </div>
 
@@ -153,6 +193,64 @@ const Single = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal for Booking */}
+      <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <DialogTitle>Book Room</DialogTitle>
+        <DialogContent>
+           <div className="mb-5">
+            <TextField
+              label="Check-In Date"
+              type="date"
+              value={checkInDate}
+              onChange={(e) => setCheckInDate(e.target.value)}
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+            />
+          </div>
+          <div className="mb-4">
+            <TextField
+              label="Check-Out Date"
+              type="date"
+              value={checkOutDate}
+              onChange={(e) => setCheckOutDate(e.target.value)}
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+            />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <MUIButton onClick={() => setIsModalOpen(false)} sx={{
+        textTransform: 'none',
+        borderRadius: '12px',
+        padding: '10px 20px',
+        fontWeight: 'bold',
+       
+          backgroundColor: 'black',
+          '&:hover': { backgroundColor: 'red' },
+          color: 'white',
+       
+      }}>
+            Cancel
+          </MUIButton>
+          <MUIButton
+            onClick={() => bookRoom(data._id, data.price)}
+            sx={{
+              textTransform: 'none',
+              borderRadius: '12px',
+              padding: '10px 20px',
+              fontWeight: 'bold',
+             
+                backgroundColor: '#e57c00',
+                '&:hover': { backgroundColor: '#cc6d00' },
+                color: 'black',
+             
+            }}
+          >
+            Confirm Booking
+          </MUIButton>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

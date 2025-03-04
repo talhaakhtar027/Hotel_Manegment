@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Loginuser from "./pages/Loginuser";
+import Loginuser from "./pages/fornt_end/component/Loginuser";
 import Booking from "./pages/fornt_end/Booking"
 import "./assets/css/Navber.css";
 import Home from "./pages/fornt_end/Home";

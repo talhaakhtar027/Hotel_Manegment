@@ -16,6 +16,43 @@ exports.postcreatebookingmanual =  async (req, res) => {
     res.status(500).json({ message: 'Error creating booking', error });
   }
 }
+// Get all manual bookings
+exports.getAllManualBookings = async (req, res) => {
+  try {
+    const bookings = await Bookingmanual.find(req.body);
+    res.status(200).json({ data: bookings });
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+    res.status(500).json({ error: "Failed to fetch bookings" });
+  }
+};
+
+// Update booking status
+exports.updateManualBookingStatus = async (req, res) => {
+  const { bookingId } = req.params;
+  const { status } = req.body;
+
+  if (!status) {
+    return res.status(400).json({ error: "Status is required" });
+  }
+
+  try {
+    const booking = await Bookingmanual.findById(bookingId);
+
+    if (!booking) {
+      return res.status(404).json({ error: "Booking not found" });
+    }
+
+    // Update status
+    booking.status = status;
+    await booking.save();
+
+    res.status(200).json({ message: "Booking status updated successfully" });
+  } catch (error) {
+    console.error("Error updating booking status:", error);
+    res.status(500).json({ error: "Failed to update status" });
+  }
+};
 
 // Helper function to normalize the date format (e.g. '2021-02-1' -> '2021-02-01')
 function normalizeDate(dateString) {
@@ -242,6 +279,7 @@ exports.checkRoomAvailability = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server Error', error });
   }
 };
+
 
 
 // exports.getbookingsuserroom = async (req, res) => {

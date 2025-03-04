@@ -50,7 +50,7 @@ exports.postlogin = async (req, res) => {
     }
 
     // Generate JWT Token
-    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ id: user._id,name: user.name, email: user.email, phone: user.phone }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
     res.json({ token, user: { name: user.name, email: user.email, phone: user.phone } });
 }

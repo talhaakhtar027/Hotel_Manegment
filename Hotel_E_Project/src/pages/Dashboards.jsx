@@ -19,7 +19,7 @@ function Dashboards() {
         <div className="text-2xl font-bold">Admin Panel </div>
         <ul className="flex space-x-6">
           <li>
-            <Link to="/admin">Dashboards</Link>
+            <Link to="/admin/adminNav">Dashboards</Link>
           </li>
           <li>
             <Link to="/admin/user">User</Link>
@@ -29,6 +29,9 @@ function Dashboards() {
           </li>
           <li>
             <Link to="/admin/bookings">Bookings</Link>
+          </li>
+          <li>
+            <Link to="/admin/ManualBooking">ManualBookings</Link>
           </li>
         
         </ul>

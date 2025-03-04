@@ -87,7 +87,7 @@ const RoomsComponent = ({ gridCols = "grid-cols-3" }) => {
                 <Box>
                   <Link to={`/single/${room._id}`} style={{ textDecoration: "none" }}>
                     <Typography variant="h6" component="h5" sx={{ fontWeight: "bold", color: "white" }}>
-                      {room.type} Room
+                      {room.type} 
                     </Typography>
                   </Link>
                   <Typography variant="body2" sx={{ mb: 2, color: "white" }}>
@@ -106,7 +106,7 @@ const RoomsComponent = ({ gridCols = "grid-cols-3" }) => {
                     sx={{ width: "100%", backgroundColor: '#e57c00', '&:hover': { backgroundColor: '#cc6d00' }, color: 'black' }}
                     endIcon={<HiChevronRight />}
                   >
-                    Book Now For ${room.price}
+                    Book Now For {room.price}$
                   </MuiButton>
                 </a>
               </CardContent>

@@ -9,9 +9,11 @@ const roomSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['Single', 'Double', 'Suite'],
+      enum: ['standard_room', 'deluxe_room', 'premier_room', 'family_suite', 'luxury_suite', 'president_suite'],
       required: true,
     },
+    
+    
     price: {
       type: Number,
       required: true,

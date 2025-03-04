@@ -11,6 +11,7 @@ import pool from '/assets/images/pool.jpg'
 import bathroom from '/assets/images/bathroom.jpg'
 import "./fornt_end_css/css/gallery.css"
 import "./fornt_end_css/css/style1.css"
+import Navbar from './component/Navbar';
 
 const Gallery = () => {
     useEffect(() => {
@@ -38,22 +39,8 @@ const Gallery = () => {
                 </Box>
 
                 {/* Navbar Section */}
-                <Box className="content" sx={{ position: 'relative', zIndex: 10 }}>
-                    <nav className="navbar" style={{ position: 'relative', zIndex: 20 }}>
-                        <div className="logo">Marina Hotel</div>
-                        <ul className="nav-links">
-                            <li><Link to="/">Home</Link></li>
-                            <li><Link to="/app/about">About</Link></li>
-                            <li><Link to="/app/rooms">Rooms</Link></li>
-                            <li><Link to="/app/booking">Booking</Link></li>
-                            <li><Link to="/app/gallery">Gallery</Link></li>
-                            <li><Link to="/app/contact">Contact</Link></li>
-                        </ul>
-                        <Button variant="contained" sx={{ backgroundColor: '#e57c00', '&:hover': { backgroundColor: '#cc6d00' } }}>
-                            Booking
-                        </Button>
-                    </nav>
-                </Box>
+                < Navbar />
+
             </Box>
 
             {/* Rest of the content (Gallery section) */}

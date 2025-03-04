@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
 const cors = require('cors');
+const { verifyToken } = require('./middlewares/authMiddleware'); // Make sure this is correct
+
 
 dotenv.config();
 const app = express();
@@ -25,7 +27,7 @@ mongoose
 const bookingRoutes = require('./routes/bookingRoutes');
 app.use('/api/bookings', bookingRoutes);
 
-
+ 
 
 const roomRoutes = require('./routes/roomRoutes'); // Fixed typo
 app.use('/api/rooms', roomRoutes);
@@ -33,14 +35,14 @@ app.use('/api/rooms', roomRoutes);
 const userRoutes = require('./routes/userRoutes'); // Fixed typo
 app.use('/api/users', userRoutes);
 
+const adminRoutes = require('./routes/adminroute'); // Path to your admin routes file
+app.use('/api/admin', adminRoutes);
 
 // Protected Route Example
 
-const authenticateToken = require('./routes/userRoutes'); // Fixed typo
-app.get("/api/protected", authenticateToken, (req, res) => {
+app.get("/api/protected", verifyToken, (req, res) => {
   res.json({ message: "Protected route accessed", user: req.user });
 });
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

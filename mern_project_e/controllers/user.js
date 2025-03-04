@@ -3,7 +3,7 @@ const cors = require('cors');
 require('colors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt'); // Import bcrypt
-const  User  = require('../model/user'); // Import your schema
+const User = require('../model/user'); // Import your schema
 
 const app = express();
 
@@ -23,13 +23,14 @@ exports.getusers = async (req, res) => {
     } catch (err) {
         console.error('❌ Error fetching users:', err);
         res.status(500).json({
-            success: false,
+            success: false, 
             message: 'Failed to fetch users',
             error: err.message, // Include error message for debugging
         });
     }
 }
 
+// GET API: Get the total count of users
 exports.getuserscount = async (req, res) => {
     try {
         const userCount = await User.countDocuments();
@@ -72,7 +73,7 @@ exports.postusers = async (req, res) => {
     }
 }
 
-// PUT API: Update user information
+// PUT API: Update user information by ID
 exports.putusersid = async (req, res) => {
     const { id } = req.params;
     const { name, email, phone, password, role } = req.body;
@@ -108,7 +109,7 @@ exports.putusersid = async (req, res) => {
     }
 }
 
-// DELETE API: Delete a user
+// DELETE API: Delete a user by ID
 exports.deleteusersid = async (req, res) => {
     try {
         const { id } = req.params;
@@ -137,3 +138,55 @@ exports.deleteusersid = async (req, res) => {
         });
     }
 }
+
+// GET API: Fetch the current user's profile (protected route)
+exports.getUserProfile = async (req, res) => {
+    try {
+        const userId = req.user.id; // From the token
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({
+            success: true,
+            user, // Send back the user data (excluding password)
+        });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+};
+
+// PUT API: Update the current user's profile (protected route)
+// PUT API: Update user profile
+exports.updateUserProfile = async (req, res) => {
+    const userId = req.user.id; // The user ID from the verified token
+    const { name, email, phone, password } = req.body;
+
+    try {
+        const existingUser = await User.findById(userId);
+
+        if (!existingUser) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        // If password is being updated, hash it
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            req.body.password = hashedPassword; // Update password with hashed version
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
+
+        if (!updatedUser) {
+            throw new Error("Error while updating the user.");
+        }
+
+        res.json({ success: true, user: updatedUser });
+    } catch (err) {
+        console.error("Error updating user:", err);  // Detailed log for server-side debugging
+        res.status(500).json({ success: false, message: "Error updating user", error: err.message });
+    }
+};
+
